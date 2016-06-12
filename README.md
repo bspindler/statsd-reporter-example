@@ -17,7 +17,7 @@ As mentioned in ReporterFactory class we're going to:
 ### Add the StatsDReporterFactory
 * [StatsDReporterFactory](https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java) takes care of 
     * building the [StatsDReporter](https://github.com/ReadyTalk/metrics-statsd/blob/master/metrics3-statsd/src/main/java/com/readytalk/metrics/StatsDReporter.java) and binding to [MetricRegistry](https://github.com/dropwizard/metrics/blob/3.1-maintenance/metrics-core/src/main/java/com/codahale/metrics/MetricRegistry.java)
-    * sets the name via the [@JsonTypeName](https://github.com/FasterXML/jackson-annotations/blob/master/src/main/java/com/fasterxml/jackson/annotation/JsonTypeName.java)  annotation, we named it "statsd-reporter-example"
+    * sets the name via the [@JsonTypeName](https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java#L35)  annotation, we named it "statsd-reporter-example"
 
 
 ### Adding the io.dropwizard.metrics.ReporterFactory services file
