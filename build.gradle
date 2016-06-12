@@ -1,0 +1,27 @@
+group 'com.netuitive'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea' 
+
+sourceCompatibility = 1.8
+
+project.ext {
+    dropwizardVersion = '0.9.2'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url  "http://dl.bintray.com/readytalk/maven"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile (
+            'io.dropwizard:dropwizard-core:' + dropwizardVersion
+    )
+    compile 'com.readytalk:metrics3-statsd:4.1.0'
+}
