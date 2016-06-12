@@ -15,17 +15,49 @@
  * THIS SOFTWARE OR ITS DERIVATIVES.
  */
 
-package com.netuitive.io.dropwizard;import com.codahale.metrics.MetricRegistry;
+package com.netuitive.io.dropwizard;
+
+import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.readytalk.metrics.StatsDReporter;
 import io.dropwizard.metrics.BaseReporterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.NotNull;
 
 /**
+ *
  * Created by bspindler on 6/10/16.
  */
 @JsonTypeName("statsd-reporter-example")
 public class StatsDReporterFactory extends BaseReporterFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StatsDReporterFactory.class);
+
+    @NotNull
+    private String host;
+
+    @JsonProperty
+    public String getHost() {
+        return host;
+    }
+
+    @JsonProperty
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    @NotNull
+    private int port;
+
+    @JsonProperty
+    public int getPort() { return port; }
+
+    @JsonProperty
+    public void setPort(int port) { this.port = port; }
 
     /**
      * Configures and builds a {@link ScheduledReporter} instance for the given registry.
@@ -35,11 +67,15 @@ public class StatsDReporterFactory extends BaseReporterFactory {
      */
     @Override
     public ScheduledReporter build(MetricRegistry registry) {
-        StatsDReporter statsDReporter
-                = StatsDReporter.forRegistry(registry)
-                                .filter(getFilter())
-                                .build("localhost", 8125);
 
-        return statsDReporter;
+        StatsDReporter.Builder builder
+                = StatsDReporter.forRegistry(registry)
+                                .convertDurationsTo(getDurationUnit())
+                                .convertRatesTo(getRateUnit())
+                                .filter(getFilter());
+
+        LOG.info("StatsDReporterFactory built with host: {}, port: {}", getHost(), getPort());
+
+        return builder.build(getHost(), getPort());
     }
 }

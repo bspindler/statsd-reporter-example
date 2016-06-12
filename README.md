@@ -35,7 +35,16 @@ That's it, this can now be built and integrated into your dropwizard.io applicat
 ## Use it in your own project
 add as a dependency: 
 ### Gradle w/local install 
-`compile('com.netuitive.statsd-reporter-example:0.1-SNAPSHOT')`
+`compile('com.netuitive.statsd-reporter-example:1.0-SNAPSHOT')`
+### Update your config.yml
+```
+metrics:
+  frequency: 1 minute
+  reporters:
+      - type: statsd-reporter-example
+        host: localhost
+        port: 8125
+```
 
 ### Using bintray 
 ...
