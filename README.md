@@ -4,7 +4,7 @@ Example showing how to integrate a custom statsd-reporter into Dropwizard.io. vi
 
 As mentioned in ReporterFactory class we're going to:
 
-* Create a class which implements [ReporterFactory](https://github.com/dropwizard/dropwizard/blob/master/dropwizard-metrics/src/main/java/io/dropwizard/metrics/ReporterFactory.java) .
+* Create a class which implements `ReporterFactory`.
 * Annotate it with [@JsonTypeName](https://github.com/FasterXML/jackson-annotations/blob/master/src/main/java/com/fasterxml/jackson/annotation/JsonTypeName.java) and give it a unique type name.
 * Add a [`src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory`](https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory) file with your implementation's full class name to the class path.
 
@@ -14,7 +14,7 @@ As mentioned in ReporterFactory class we're going to:
 * add the [bintray repository](https://github.com/bspindler/statsd-reporter-example/blob/master/build.gradle#L17) 
 * add [ready talk dependency ](https://github.com/bspindler/statsd-reporter-example/blob/master/build.gradle#L27)
 
-### Add the StatsDReporterFactory
+### Adding the StatsDReporterFactory
 * [StatsDReporterFactory](https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java) takes care of 
     * building and configuring the [StatsDReporter](https://github.com/ReadyTalk/metrics-statsd/blob/master/metrics3-statsd/src/main/java/com/readytalk/metrics/StatsDReporter.java) instance we'll be using along with binding it to the [MetricRegistry](https://github.com/dropwizard/metrics/blob/3.1-maintenance/metrics-core/src/main/java/com/codahale/metrics/MetricRegistry.java)
     * sets the name via the [@JsonTypeName](https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java#L35)  annotation, we named it "statsd-reporter-example"
@@ -34,8 +34,12 @@ That's it, this can now be built and integrated into your dropwizard.io applicat
 ## Use it in your own project
 add as a dependency: 
 ### Gradle w/local install 
-`compile('com.netuitive.statsd-reporter-example:1.0-SNAPSHOT')`
-### Update your config.yml
+```
+dependencies {
+    compile('com.netuitive.statsd-reporter-example:1.0-SNAPSHOT')
+}
+```
+### Update your dropwizard.io config.yml
 ```
 metrics:
   frequency: 1 minute
