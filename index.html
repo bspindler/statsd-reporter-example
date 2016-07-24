@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Statsd-reporter-example by bspindler</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Statsd-reporter-example</h1>
+        <p>an example of how to plugin custom reporters to dropwizard.io framework</p>
+        <p class="view"><a href="https://github.com/bspindler/statsd-reporter-example">View the Project on GitHub <small>bspindler/statsd-reporter-example</small></a></p>
+        <ul>
+          <li><a href="https://github.com/bspindler/statsd-reporter-example/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bspindler/statsd-reporter-example/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bspindler/statsd-reporter-example">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="dropwizardio-statsd-reporter-example" class="anchor" href="#dropwizardio-statsd-reporter-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="http://www.dropwizard.io/">DropWizard.io</a> statsd-reporter-example</h1>
+
+<p>Example showing how to integrate a custom statsd-reporter into Dropwizard.io. via the SPI <a href="https://github.com/dropwizard/dropwizard/blob/master/dropwizard-metrics/src/main/java/io/dropwizard/metrics/ReporterFactory.java">ReporterFactory</a>.  This is the native way of plugging in new <a href="https://github.com/dropwizard/metrics/blob/v3.1.2/metrics-core/src/main/java/com/codahale/metrics/ScheduledReporter.java">ScheduledReporter's'</a> </p>
+
+<p>As mentioned in ReporterFactory class we're going to:</p>
+
+<ul>
+<li>Create a class which implements <code>ReporterFactory</code>.</li>
+<li>Annotate it with <a href="https://github.com/FasterXML/jackson-annotations/blob/master/src/main/java/com/fasterxml/jackson/annotation/JsonTypeName.java">@JsonTypeName</a> and give it a unique type name.</li>
+<li>Add a <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory"><code>src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory</code></a> file with your implementation's full class name to the class path.</li>
+</ul>
+
+<h2>
+<a id="integrating-the-statsdreporter-from-readytalk" class="anchor" href="#integrating-the-statsdreporter-from-readytalk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the <a href="https://github.com/ReadyTalk/metrics-statsd/blob/master/metrics3-statsd/src/main/java/com/readytalk/metrics/StatsDReporter.java">StatsDReporter</a> from <a href="https://github.com/ReadyTalk/metrics-statsd">ReadyTalk</a>
+</h2>
+
+<h3>
+<a id="add-metrics-statsd-reporter-as-a-dependency" class="anchor" href="#add-metrics-statsd-reporter-as-a-dependency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add metrics-statsd reporter as a dependency</h3>
+
+<ul>
+<li>add the <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/build.gradle#L17">bintray repository</a> </li>
+<li>add <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/build.gradle#L27">ready talk dependency </a>
+</li>
+</ul>
+
+<h3>
+<a id="adding-the-statsdreporterfactory" class="anchor" href="#adding-the-statsdreporterfactory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adding the StatsDReporterFactory</h3>
+
+<ul>
+<li>
+<a href="https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java">StatsDReporterFactory</a> takes care of 
+
+<ul>
+<li>building and configuring the <a href="https://github.com/ReadyTalk/metrics-statsd/blob/master/metrics3-statsd/src/main/java/com/readytalk/metrics/StatsDReporter.java">StatsDReporter</a> instance we'll be using along with binding it to the <a href="https://github.com/dropwizard/metrics/blob/3.1-maintenance/metrics-core/src/main/java/com/codahale/metrics/MetricRegistry.java">MetricRegistry</a>
+</li>
+<li>sets the name via the <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java#L35">@JsonTypeName</a>  annotation, we named it "statsd-reporter-example"</li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="adding-the-iodropwizardmetricsreporterfactory-services-file" class="anchor" href="#adding-the-iodropwizardmetricsreporterfactory-services-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adding the io.dropwizard.metrics.ReporterFactory services file</h3>
+
+<ul>
+<li>added <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory"><code>src/main/resources/META-INF/services/io.dropwizard.metrics.ReporterFactory</code></a> with our <a href="https://github.com/bspindler/statsd-reporter-example/blob/master/src/main/java/com/netuitive/io/dropwizard/StatsDReporterFactory.java">StatsDReporterFactory</a> class defined as the <a href="https://github.com/dropwizard/dropwizard/blob/master/dropwizard-metrics/src/main/java/io/dropwizard/metrics/ReporterFactory.java">ReporterFactory</a>.</li>
+</ul>
+
+<p>That's it, this can now be built and integrated into your dropwizard.io application. 
+<a href="http://github.com/example-for-integratinthisthing">Check out this example to see how.</a></p>
+
+<h2>
+<a id="build-it" class="anchor" href="#build-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build it</h2>
+
+<p><code>./gradlew build</code></p>
+
+<h2>
+<a id="install-it" class="anchor" href="#install-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install it</h2>
+
+<p><code>./gradlew install</code></p>
+
+<h2>
+<a id="use-it-in-your-own-project" class="anchor" href="#use-it-in-your-own-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use it in your own project</h2>
+
+<p>add as a dependency: </p>
+
+<h3>
+<a id="gradle-wlocal-install" class="anchor" href="#gradle-wlocal-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradle w/local install</h3>
+
+<pre><code>dependencies {
+    compile('com.netuitive.statsd-reporter-example:1.0-SNAPSHOT')
+}
+</code></pre>
+
+<h3>
+<a id="update-your-dropwizardio-configyml" class="anchor" href="#update-your-dropwizardio-configyml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Update your dropwizard.io config.yml</h3>
+
+<pre><code>metrics:
+  frequency: 1 minute
+  reporters:
+      - type: statsd-reporter-example
+        host: localhost
+        port: 8125
+</code></pre>
+
+<h3>
+<a id="using-bintray" class="anchor" href="#using-bintray" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using bintray</h3>
+
+<p>...</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/bspindler">bspindler</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
